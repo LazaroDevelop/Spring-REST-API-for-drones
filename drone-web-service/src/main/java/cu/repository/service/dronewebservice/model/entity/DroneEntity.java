@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "drones")
@@ -38,4 +39,7 @@ public class DroneEntity {
 
     @Enumerated(EnumType.STRING)
     private State state;
+
+    @OneToMany(mappedBy = "drone")
+    private Set<MedicationEntity> medications;
 }
