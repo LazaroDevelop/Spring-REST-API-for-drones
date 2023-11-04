@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import cu.repository.service.dronewebservice.model.enums.EModels;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Entity
 @NoArgsConstructor
