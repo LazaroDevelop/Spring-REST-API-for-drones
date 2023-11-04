@@ -1,6 +1,7 @@
 package cu.repository.service.dronewebservice.model.entity;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,9 +15,12 @@ import javax.persistence.Table;
 import cu.repository.service.dronewebservice.model.enums.EModels;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 @Entity
+@ToString
 @NoArgsConstructor
 @Table(name = "check_battery")
 public class CheckBatteryEvent {
@@ -25,18 +29,22 @@ public class CheckBatteryEvent {
     private Long id;
 
     @Getter
+    @Setter
     @Column(length = 100, nullable = false)
     private long droneSerialNumber;
 
+    @Setter
     @Getter
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EModels droneModel;
 
+    @Setter
     @Getter
     @Column(nullable = false)
     private int droneBatteryLevel;
 
+    @Setter
     @Getter
     @Column(nullable = false)
     private Date timestamp;

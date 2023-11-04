@@ -6,19 +6,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@ToString
 @Table(name = "drones")
 @NoArgsConstructor
 @AllArgsConstructor
 public class DroneEntity {
     @Id
+    @Getter
     @Column(length = 100, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long serialNumber;
 
 
     @Getter
