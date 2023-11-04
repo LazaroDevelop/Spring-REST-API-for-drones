@@ -6,13 +6,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cu.repository.service.dronewebservice.model.entity.DroneEntity;
 import cu.repository.service.dronewebservice.model.entity.MedicationEntity;
 import cu.repository.service.dronewebservice.model.enums.EState;
 import cu.repository.service.dronewebservice.repository.IDroneRepository;
 import cu.repository.service.dronewebservice.repository.IMedicationRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Service
 public class DroneService implements IDroneService {
 
     @Autowired
@@ -33,6 +37,7 @@ public class DroneService implements IDroneService {
         if(drone.isPresent()){
             return drone.get().getBattery();
         }else {
+            log.error("Drone with id: {} not found", droneId);
             throw new RuntimeException("Drone with id: " +  droneId + " not found");
         }
     }
@@ -43,6 +48,7 @@ public class DroneService implements IDroneService {
         if(drone.isPresent()){
             return drone.get().getMedications();
         }else {
+            log.info("Drone with id: {} not found", droneId);
             throw new RuntimeException("Drone with id: "+ droneId + " not found");
         }
     }
@@ -59,9 +65,10 @@ public class DroneService implements IDroneService {
         if(drone.isPresent()){
             medication.setDrone(drone.get());
             this.medicationRepository.save(medication);
+            log.info("Drone with id: {} was loaded successfuly", droneId);
             return true;
         }
-
+        log.error("Drone with id: {} not found", droneId);
         return false;
     }
 
