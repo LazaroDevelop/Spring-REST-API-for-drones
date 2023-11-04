@@ -1,7 +1,7 @@
 package cu.repository.service.dronewebservice.model.entity;
 
-import cu.repository.service.dronewebservice.model.enums.Models;
-import cu.repository.service.dronewebservice.model.enums.State;
+import cu.repository.service.dronewebservice.model.enums.EModels;
+import cu.repository.service.dronewebservice.model.enums.EState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,16 +16,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class DroneEntity {
     @Id
+    @Column(length = 100, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(length = 100, nullable = false, unique = true)
-    @Getter
-    @Setter
-    private String serialNumber;
 
+    @Getter
     @Enumerated(EnumType.STRING)
-    private Models model;
+    private EModels model;
 
     @Getter
     @Setter
@@ -37,9 +35,11 @@ public class DroneEntity {
     @Column(nullable = false)
     private int battery;
 
+    @Getter
     @Enumerated(EnumType.STRING)
-    private State state;
+    private EState state;
 
+    @Getter
     @OneToMany(mappedBy = "drone")
     private Set<MedicationEntity> medications;
 }

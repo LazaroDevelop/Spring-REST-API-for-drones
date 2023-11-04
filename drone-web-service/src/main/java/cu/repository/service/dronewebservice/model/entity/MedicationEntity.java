@@ -6,11 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "medication")
+@Table(name = "medicationw")
 public class MedicationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +20,7 @@ public class MedicationEntity {
     @Column(nullable = false)
     @Getter
     @Setter
+    @Pattern(regexp = "^[a-zA-Z0-9-_]+$")
     private String name;
 
     @Column(nullable = false)
@@ -29,6 +31,7 @@ public class MedicationEntity {
     @Column(nullable = false)
     @Getter
     @Setter
+    @Pattern(regexp = "^[A-Z0-9_]+$")
     private String code;
 
     @Column(nullable = false)
@@ -38,5 +41,7 @@ public class MedicationEntity {
 
     @ManyToOne
     @JoinColumn(name = "drone_id", nullable = false)
+    @Getter
+    @Setter
     private DroneEntity drone;
 }

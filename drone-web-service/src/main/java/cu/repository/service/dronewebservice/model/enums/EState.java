@@ -1,5 +1,5 @@
 package cu.repository.service.dronewebservice.model.enums;
 
-public enum State {
+public enum EState {
     IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING
 }
