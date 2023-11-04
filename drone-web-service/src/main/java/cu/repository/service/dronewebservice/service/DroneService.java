@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cu.repository.service.dronewebservice.exceptions.DroneNotFoundException;
 import cu.repository.service.dronewebservice.model.entity.DroneEntity;
 import cu.repository.service.dronewebservice.model.entity.MedicationEntity;
 import cu.repository.service.dronewebservice.model.enums.EState;
@@ -38,7 +39,7 @@ public class DroneService implements IDroneService {
             return drone.get().getBattery();
         }else {
             log.error("Drone with id: {} not found", droneId);
-            throw new RuntimeException("Drone with id: " +  droneId + " not found");
+            throw new DroneNotFoundException("Drone with id: " +  droneId + " not found");
         }
     }
 
@@ -49,7 +50,7 @@ public class DroneService implements IDroneService {
             return drone.get().getMedications();
         }else {
             log.info("Drone with id: {} not found", droneId);
-            throw new RuntimeException("Drone with id: "+ droneId + " not found");
+            throw new DroneNotFoundException("Drone with id: "+ droneId + " not found");
         }
     }
 
