@@ -8,16 +8,33 @@ The following was discovered as part of building this project:
 
 # Getting Started
 
+#Spring-REST-API-for-drones
+
+### My Recommendations
+
+- Use Java 8
+- Use Maven to run Spring Boot applications
+- Remember: Spring Boot 2+ works with Java 8+
+
+
 ### Reference Documentation
+Tecnologies
+* Spring
+* JSON
+## Dependencies
+* Spring Boot - 2.6.8
+* Spring Data Jpa 
+* H2 SQL Embedded
+* Lombok
+* JUnit4
+* Spring Validator
+### Running backend app
 
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.1.5/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.1.5/maven-plugin/reference/html/#build-image)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.1.5/reference/htmlsingle/index.html#using.devtools)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/3.1.5/reference/htmlsingle/index.html#web)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.1.5/reference/htmlsingle/index.html#data.sql.jpa-and-spring-data)
+To run the backend application I recommend using the Maven(CLI) to start the Spring Tomcat server:
+* Execute the command ``` mvn dependency:resolve ``` to search application dependencies.
+* Execute the command ``` mvn clean install ``` to generate the resources, run tests and build the application.
+* Execute the command ``` mvn test ``` to run only the unitary tests.
+* Execute the command ``` mvn spring-boot:run ``` to set up the application and then you can consume the REST API in the default port 8080.
 
 ### Guides
 
