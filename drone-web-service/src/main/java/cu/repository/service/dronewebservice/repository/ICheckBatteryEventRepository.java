@@ -7,7 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import cu.repository.service.dronewebservice.model.entity.CheckBatteryEvent;
 
+/**
+ * @author Lázaro Noel Guerra
+ * @version 1.0
+ * @brief Check battery event repository
+ */
 @Repository
-public interface IBatteryEventRepository extends JpaRepository<CheckBatteryEvent, Long>{ 
+public interface ICheckBatteryEventRepository extends JpaRepository<CheckBatteryEvent, Long>{
     List<CheckBatteryEvent> findAll();
 }

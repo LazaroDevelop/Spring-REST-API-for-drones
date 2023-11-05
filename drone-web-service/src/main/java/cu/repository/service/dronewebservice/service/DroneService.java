@@ -19,6 +19,11 @@ import cu.repository.service.dronewebservice.model.enums.EState;
 import cu.repository.service.dronewebservice.repository.IDroneRepository;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author Lázaro Noel Guerra
+ * @version 1.0
+ */
+
 @Slf4j
 @Service
 public class DroneService implements IDroneService {
@@ -38,24 +43,24 @@ public class DroneService implements IDroneService {
     }
 
     @Override
-    public int checkBatteryLevel(Long droneId) {
-        Optional<DroneEntity> drone = this.droneRepository.findById(droneId);
+    public int checkBatteryLevel(Long serialNumber) {
+        Optional<DroneEntity> drone = this.droneRepository.findById(serialNumber);
         if(drone.isPresent()){
             return drone.get().getBatteryCapacity();
         }else {
-            log.error("Drone with id: {} not found", droneId);
-            throw new DroneNotFoundException("Drone with serial number: " +  droneId + " not found");
+            log.error("Drone with id: {} not found", serialNumber);
+            throw new DroneNotFoundException("Drone with serial number: " + serialNumber + " not found");
         }
     }
 
     @Override
-    public Set<MedicationEntity> checkMedicationItems(Long droneId) {
-        Optional<DroneEntity> drone = this.droneRepository.findById(droneId);
+    public Set<MedicationEntity> checkMedicationItems(Long serialNumber) {
+        Optional<DroneEntity> drone = this.droneRepository.findById(serialNumber);
         if(drone.isPresent()){
             return drone.get().getMedications();
         }else {
-            log.info("Drone with id: {} not found", droneId);
-            throw new DroneNotFoundException("Drone with serial number: "+ droneId + " not found");
+            log.info("Drone with id: {} not found", serialNumber);
+            throw new DroneNotFoundException("Drone with serial number: "+ serialNumber + " not found");
         }
     }
 
@@ -65,8 +70,8 @@ public class DroneService implements IDroneService {
     }
 
     @Override
-    public Boolean loadDroneWithMedications(Long droneId, MedicationEntity medication) {
-        Optional<DroneEntity> drone = this.droneRepository.findById(droneId);
+    public Boolean loadDroneWithMedications(Long serialNumber, MedicationEntity medication) {
+        Optional<DroneEntity> drone = this.droneRepository.findById(serialNumber);
 
         if(drone.isPresent()){
             double currentWeight = drone.get().getWeightLimit() + medication.getWeight();
@@ -79,10 +84,10 @@ public class DroneService implements IDroneService {
             medication.setDrone(drone.get());
             drone.get().getMedications().add(medication);
             this.droneRepository.save(drone.get());
-            log.info("Drone with serial number: {} was loaded successfuly", droneId);
+            log.info("Drone with serial number: {} was loaded successfuly", serialNumber);
             return true;
         }else{
-            log.error("Drone with serial number: {} was not found", droneId);
+            log.error("Drone with serial number: {} was not found", serialNumber);
             return false;
         }
     }

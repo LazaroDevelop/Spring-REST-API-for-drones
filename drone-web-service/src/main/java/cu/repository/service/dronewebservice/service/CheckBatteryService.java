@@ -12,8 +12,14 @@ import org.springframework.stereotype.Component;
 
 import cu.repository.service.dronewebservice.model.entity.CheckBatteryEvent;
 import cu.repository.service.dronewebservice.model.entity.DroneEntity;
-import cu.repository.service.dronewebservice.repository.IBatteryEventRepository;
+import cu.repository.service.dronewebservice.repository.ICheckBatteryEventRepository;
 import cu.repository.service.dronewebservice.repository.IDroneRepository;
+
+/**
+ * @author Lázaro Noel Guerra
+ * @version 1.0
+ * @brief Scheduled service
+ */
 
 @Component
 public class CheckBatteryService implements ICheckBatteryService{
@@ -22,7 +28,7 @@ public class CheckBatteryService implements ICheckBatteryService{
     IDroneRepository droneRepository;
 
     @Autowired
-    IBatteryEventRepository batteryEventRepository;
+    ICheckBatteryEventRepository batteryEventRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(CheckBatteryService.class);
 

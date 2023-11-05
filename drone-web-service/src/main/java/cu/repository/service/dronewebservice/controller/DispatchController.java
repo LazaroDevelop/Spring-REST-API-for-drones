@@ -13,6 +13,12 @@ import cu.repository.service.dronewebservice.model.entity.MedicationEntity;
 import cu.repository.service.dronewebservice.service.ICheckBatteryService;
 import cu.repository.service.dronewebservice.service.IDroneService;
 
+/**
+ * @author Lázaro Noel Guerra
+ * @version 1.0
+ * @brief endpoint controller
+ */
+
 @RestController
 @RequestMapping("v1/api")
 public class DispatchController {
@@ -23,6 +29,10 @@ public class DispatchController {
     @Autowired
     ICheckBatteryService batteryService;
 
+    /**
+     * GET Endpoint for show log history
+     * @return a {@link ResponseEntity} with a list of {@link CheckBatteryEvent}
+     */
     @GetMapping("/show-log-history")
     public ResponseEntity<List<CheckBatteryEvent>> showHistory(){
         List<CheckBatteryEvent> events = this.batteryService.showEventHistory();
@@ -32,7 +42,10 @@ public class DispatchController {
         return ResponseEntity.ok(events);
     }
 
-
+    /**
+     * GET Endpoint for show all the drones in the system
+     * @return a {@link ResponseEntity} with a list of {@link DroneEntity}
+     */
     @GetMapping("/drone-all")
     public ResponseEntity<List<DroneEntity>> findAllDrones(){
         List<DroneEntity> drones = this.droneService.findAllDrones();
@@ -42,6 +55,11 @@ public class DispatchController {
         return ResponseEntity.ok(drones);
     }
 
+    /**
+     * POST Endpoint for create a new drone
+     * @param drone the new drone
+     * @return a {@link ResponseEntity} with a {@link DroneEntity} created
+     */
     @PostMapping("/drone-new")
     public ResponseEntity<DroneEntity> saveNewDrone(@RequestBody DroneEntity drone){
         DroneEntity newDrone = this.droneService.saveNewDrone(drone);
@@ -51,29 +69,49 @@ public class DispatchController {
         return ResponseEntity.ok(newDrone);
     }
 
-    @PutMapping("/add-medication/{droneId}")
-    public ResponseEntity<String> addMedication(@PathVariable("droneId") Long droneId, @RequestBody MedicationEntity medication){
-        if(this.droneService.loadDroneWithMedications(droneId, medication)){
+    /**
+     * PUT Endpoint for add medication in a given drone
+     * @param serialNumber the serial number of the drone
+     * @param medication the medication to add
+     * @return a <code>String<code/> message
+     */
+    @PutMapping("/add-medication/{serialNumber}")
+    public ResponseEntity<String> addMedication(@PathVariable("serialNumber") Long serialNumber, @RequestBody MedicationEntity medication){
+        if(this.droneService.loadDroneWithMedications(serialNumber, medication)){
             return ResponseEntity.ok("Drone loaded");
         }else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/drone-medications/{droneId}")
-    public ResponseEntity<Set<MedicationEntity>> checkMedications(@PathVariable("droneId") Long droneId){
-        Set<MedicationEntity> medications = this.droneService.checkMedicationItems(droneId);
+    /**
+     * GET Endpoint for check the medications of one given drone
+     * @param serialNumber the serial number of the drone
+     * @return the medication set of the drone
+     */
+    @GetMapping("/drone-medications/{serialNumber}")
+    public ResponseEntity<Set<MedicationEntity>> checkMedications(@PathVariable("serialNumber") Long serialNumber){
+        Set<MedicationEntity> medications = this.droneService.checkMedicationItems(serialNumber);
         if(medications.isEmpty()){
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(medications);
     }
 
-    @GetMapping("/drone-battery-level/{droneId}")
-    public ResponseEntity<String> checkDroneBatteryLevel(@PathVariable("droneId") Long droneId){
-        return ResponseEntity.ok("Drone battery level is " + this.droneService.checkBatteryLevel(droneId) + "%");
+    /**
+     * GET Endpoint for know the battery level of one given drone
+     * @param serialNumber the serial number of the drone
+     * @retur a <code>String<code/> message with battery level
+     */
+    @GetMapping("/drone-battery-level/{serialNumber}")
+    public ResponseEntity<String> checkDroneBatteryLevel(@PathVariable("serialNumber") Long serialNumber){
+        return ResponseEntity.ok("Drone battery level is " + this.droneService.checkBatteryLevel(serialNumber) + "%");
     }
 
+    /**
+     * GET Endpoint for know the drones for loading
+     * @return a list of {@link DroneEntity} ready for loading
+     */
     @GetMapping("/drone-for-loading")
     public ResponseEntity<List<DroneEntity>> checkDronesForLoading(){
         List<DroneEntity> drones = this.droneService.checkAvailableDronesForLoading();
@@ -82,6 +120,10 @@ public class DispatchController {
         return ResponseEntity.ok(drones);
     }
 
+    /**
+     * GET Endpoint to the connection
+     * @return a <code>String<code/> message
+     */
     @GetMapping("/ping")
     public ResponseEntity<String> testConnection(){
         return ResponseEntity.ok("The service is running");

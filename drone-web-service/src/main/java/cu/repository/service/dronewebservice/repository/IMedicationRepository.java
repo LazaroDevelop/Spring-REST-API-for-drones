@@ -5,6 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import cu.repository.service.dronewebservice.model.entity.MedicationEntity;
 
+/**
+ * @author Lázaro Noel Guerra
+ * @version 1.0
+ * @brief Repository for medication functionalities
+ */
 @Repository
 public interface IMedicationRepository extends JpaRepository<MedicationEntity, Long>{
 }

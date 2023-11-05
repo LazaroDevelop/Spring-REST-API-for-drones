@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import cu.repository.service.dronewebservice.model.entity.CheckBatteryEvent;
-import cu.repository.service.dronewebservice.repository.IBatteryEventRepository;
+import cu.repository.service.dronewebservice.repository.ICheckBatteryEventRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +26,7 @@ class DroneWebServiceApplicationTests {
     WebTestClient webTestClient;
 
     @Autowired
-    IBatteryEventRepository batteryEventRepository;
+    ICheckBatteryEventRepository batteryEventRepository;
 
     @Test
     void pingTest() {
