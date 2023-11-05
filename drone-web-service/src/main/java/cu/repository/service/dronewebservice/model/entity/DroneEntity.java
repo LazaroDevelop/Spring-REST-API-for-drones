@@ -1,48 +1,37 @@
 package cu.repository.service.dronewebservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import cu.repository.service.dronewebservice.model.enums.EModels;
 import cu.repository.service.dronewebservice.model.enums.EState;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
+
+@Getter
+@Setter
 @Entity
 @ToString
-@Table(name = "drones")
 @NoArgsConstructor
 @AllArgsConstructor
 public class DroneEntity {
     @Id
-    @Getter
-    @Column(length = 100, updatable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(length = 100)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long serialNumber;
 
-
-    @Getter
     @Enumerated(EnumType.STRING)
     private EModels model;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
-    private float weight;
+    private double weight;
 
-    @Getter
-    @Setter
-    @Column(nullable = false)
     private int battery;
 
-    @Getter
     @Enumerated(EnumType.STRING)
     private EState state;
 
-    @Getter
-    @OneToMany(mappedBy = "drone")
+    @OneToMany(fetch = FetchType.LAZY ,mappedBy = "drone", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<MedicationEntity> medications;
 }

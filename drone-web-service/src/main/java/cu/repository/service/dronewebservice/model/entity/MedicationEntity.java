@@ -1,47 +1,36 @@
 package cu.repository.service.dronewebservice.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
+@Getter
+@Setter
 @Entity
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "medicationw")
 public class MedicationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @Getter
-    @Setter
     @Pattern(regexp = "^[a-zA-Z0-9-_]+$")
     private String name;
 
-    @Column(nullable = false)
-    @Getter
-    @Setter
-    private float weight;
+    private double weight;
 
-    @Column(nullable = false)
-    @Getter
-    @Setter
     @Pattern(regexp = "^[A-Z0-9_]+$")
     private String code;
 
-    @Column(nullable = false)
-    @Getter
-    @Setter
     private String image;
 
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "drone_id", nullable = false)
-    @Getter
-    @Setter
     private DroneEntity drone;
 }
