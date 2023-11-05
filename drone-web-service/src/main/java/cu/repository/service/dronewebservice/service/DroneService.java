@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import cu.repository.service.dronewebservice.repository.IMedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,6 @@ import cu.repository.service.dronewebservice.model.entity.DroneEntity;
 import cu.repository.service.dronewebservice.model.entity.MedicationEntity;
 import cu.repository.service.dronewebservice.model.enums.EState;
 import cu.repository.service.dronewebservice.repository.IDroneRepository;
-import cu.repository.service.dronewebservice.repository.IMedicationRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -65,12 +65,14 @@ public class DroneService implements IDroneService {
 
         if(drone.isPresent()){
             medication.setDrone(drone.get());
-            this.medicationRepository.save(medication);
+            drone.get().getMedications().add(medication);
             log.info("Drone with id: {} was loaded successfuly", droneId);
+            this.droneRepository.save(drone.get());
             return true;
+        }else{
+            log.error("Drone with id: {} not found", droneId);
+            return false;
         }
-        log.error("Drone with id: {} not found", droneId);
-        return false;
     }
 
     @Override

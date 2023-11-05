@@ -28,7 +28,7 @@ public class DroneController {
     @Autowired
     ICheckBatteryService batteryService;
 
-    @GetMapping("show-log-history")
+    @GetMapping("/show-log-history")
     public ResponseEntity<List<CheckBatteryEvent>> showHistory(){
         List<CheckBatteryEvent> events = this.batteryService.showEventHistory();
         if(events.isEmpty()){
@@ -38,7 +38,7 @@ public class DroneController {
     }
 
 
-    @GetMapping("drone-all")
+    @GetMapping("/drone-all")
     public ResponseEntity<List<DroneEntity>> findAllDrones(){
         List<DroneEntity> drones = this.droneService.findAllDrones();
         if(drones.isEmpty()){
@@ -47,7 +47,7 @@ public class DroneController {
         return ResponseEntity.ok(drones);
     }
 
-    @PostMapping("drone-new")
+    @PostMapping("/drone-new")
     public ResponseEntity<DroneEntity> saveNewDrone(@RequestBody DroneEntity drone){
         DroneEntity newDrone = this.droneService.saveNewDrone(drone);
         if(newDrone == null){
@@ -56,15 +56,16 @@ public class DroneController {
         return ResponseEntity.ok(newDrone);
     }
 
-    @PostMapping("add-medication/{droneId}")
+    @PostMapping("/add-medication/{droneId}")
     public ResponseEntity<String> addMedication(@PathVariable("droneId") Long droneId, @RequestBody MedicationEntity medication){
         if(this.droneService.loadDroneWithMedications(droneId, medication)){
-            ResponseEntity.ok("Drone with id: {}" + droneId + " was loaded with medication " + medication.toString());
+            return ResponseEntity.ok("Drone loaded");
+        }else {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok("Error during drone medication load the drone was not found");
     }
 
-    @GetMapping("drone-medications/{droneId}")
+    @GetMapping("/drone-medications/{droneId}")
     public ResponseEntity<Set<MedicationEntity>> checkMedications(@PathVariable("droneId") Long droneId){
         Set<MedicationEntity> medications = this.droneService.checkMedicationItems(droneId);
         if(medications.isEmpty()){
@@ -73,8 +74,21 @@ public class DroneController {
         return ResponseEntity.ok(medications);
     }
 
-    @GetMapping("drone-battery-level/{droneId}")
+    @GetMapping("/drone-battery-level/{droneId}")
     public ResponseEntity<String> checkDroneBatteryLevel(@PathVariable("droneId") Long droneId){
         return ResponseEntity.ok("Drone battery level is " + this.droneService.checkBatteryLevel(droneId) + "%");
+    }
+
+    @GetMapping("/drone-for-loading")
+    public ResponseEntity<List<DroneEntity>> checkDronesForLoading(){
+        List<DroneEntity> drones = this.droneService.checkAvailableDronesForLoading();
+        if(drones.isEmpty())
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(drones);
+    }
+
+    @GetMapping("/ping")
+    public ResponseEntity<String> testConnection(){
+        return ResponseEntity.ok("The service is running");
     }
 }
