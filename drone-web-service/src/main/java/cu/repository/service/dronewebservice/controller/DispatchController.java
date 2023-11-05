@@ -5,12 +5,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cu.repository.service.dronewebservice.model.entity.CheckBatteryEvent;
 import cu.repository.service.dronewebservice.model.entity.DroneEntity;
@@ -20,7 +15,7 @@ import cu.repository.service.dronewebservice.service.IDroneService;
 
 @RestController
 @RequestMapping("v1/api")
-public class DroneController {
+public class DispatchController {
 
     @Autowired
     IDroneService droneService;
@@ -56,7 +51,7 @@ public class DroneController {
         return ResponseEntity.ok(newDrone);
     }
 
-    @PostMapping("/add-medication/{droneId}")
+    @PutMapping("/add-medication/{droneId}")
     public ResponseEntity<String> addMedication(@PathVariable("droneId") Long droneId, @RequestBody MedicationEntity medication){
         if(this.droneService.loadDroneWithMedications(droneId, medication)){
             return ResponseEntity.ok("Drone loaded");

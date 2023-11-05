@@ -24,9 +24,9 @@ public class DroneEntity {
     @Enumerated(EnumType.STRING)
     private EModels model;
 
-    private double weight;
+    private double weightLimit;
 
-    private int battery;
+    private int batteryCapacity;
 
     @Enumerated(EnumType.STRING)
     private EState state;

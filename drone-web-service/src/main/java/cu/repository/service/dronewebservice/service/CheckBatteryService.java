@@ -3,8 +3,6 @@ package cu.repository.service.dronewebservice.service;
 import java.util.Date;
 import java.util.List;
 
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +30,12 @@ public class CheckBatteryService implements ICheckBatteryService{
     @Scheduled(cron = "*/10 * * * * *")
     public void monitoringDroneBatteryLevel() {
         List<DroneEntity> drones = this.droneRepository.findAll();
-        // CheckBatteryService.logger.info("Elements: {}", drones.size());
+        CheckBatteryService.logger.info("Currents drones: {}", drones.size());
         drones.forEach(d -> {
-            CheckBatteryService.logger.info("Drone with serial number: {} and model:{} has {}% of battery level", d.getSerialNumber(), d.getModel(), d.getBattery());
+            CheckBatteryService.logger.info("Drone with serial number: {} and model:{} has {}% of battery level", d.getSerialNumber(), d.getModel(), d.getBatteryCapacity());
             CheckBatteryEvent batteryEvent = new CheckBatteryEvent();
             batteryEvent.setDroneSerialNumber(d.getSerialNumber());
-            batteryEvent.setDroneBatteryLevel(d.getBattery());
+            batteryEvent.setDroneBatteryLevel(d.getBatteryCapacity());
             batteryEvent.setDroneModel(d.getModel());
             batteryEvent.setTimestamp(new Date());
             this.batteryEventRepository.save(batteryEvent);
