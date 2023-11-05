@@ -5,7 +5,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import cu.repository.service.dronewebservice.exceptions.DroneNotReadyForLoadingBatteryException;
+import cu.repository.service.dronewebservice.exceptions.WeightLimitException;
 import cu.repository.service.dronewebservice.repository.IMedicationRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class DroneService implements IDroneService {
 
+    private final double MAX_WEIGHT = 500.0;
+
     @Autowired
     IDroneRepository droneRepository;
 
@@ -29,17 +34,17 @@ public class DroneService implements IDroneService {
     @Override
     public List<DroneEntity> checkAvailableDronesForLoading() {
         List<DroneEntity> drones = this.droneRepository.findAll();
-        return drones.stream().filter(d -> d.getState() == EState.IDLE).collect(Collectors.toList());
+        return drones.stream().filter(d -> d.getState() == EState.IDLE || d.getState() == EState.LOADED).collect(Collectors.toList());
     }
 
     @Override
     public int checkBatteryLevel(Long droneId) {
         Optional<DroneEntity> drone = this.droneRepository.findById(droneId);
         if(drone.isPresent()){
-            return drone.get().getBattery();
+            return drone.get().getBatteryCapacity();
         }else {
             log.error("Drone with id: {} not found", droneId);
-            throw new DroneNotFoundException("Drone with id: " +  droneId + " not found");
+            throw new DroneNotFoundException("Drone with serial number: " +  droneId + " not found");
         }
     }
 
@@ -50,7 +55,7 @@ public class DroneService implements IDroneService {
             return drone.get().getMedications();
         }else {
             log.info("Drone with id: {} not found", droneId);
-            throw new DroneNotFoundException("Drone with id: "+ droneId + " not found");
+            throw new DroneNotFoundException("Drone with serial number: "+ droneId + " not found");
         }
     }
 
@@ -64,19 +69,36 @@ public class DroneService implements IDroneService {
         Optional<DroneEntity> drone = this.droneRepository.findById(droneId);
 
         if(drone.isPresent()){
+            double currentWeight = drone.get().getWeightLimit() + medication.getWeight();
+            if(currentWeight >= MAX_WEIGHT){
+                throw new WeightLimitException(
+                        "Drone with serial number: " + drone.get().getSerialNumber() + "has the max weight supported, this drone can't load more medications"
+                );
+            }
+            drone.get().setWeightLimit(drone.get().getWeightLimit() + medication.getWeight());
             medication.setDrone(drone.get());
             drone.get().getMedications().add(medication);
-            log.info("Drone with id: {} was loaded successfuly", droneId);
             this.droneRepository.save(drone.get());
+            log.info("Drone with serial number: {} was loaded successfuly", droneId);
             return true;
         }else{
-            log.error("Drone with id: {} not found", droneId);
+            log.error("Drone with serial number: {} was not found", droneId);
             return false;
         }
     }
 
     @Override
     public DroneEntity saveNewDrone(DroneEntity drone) {
+        DroneEntity newDrone = new DroneEntity();
+        if(drone.getBatteryCapacity() <= 25 && drone.getState() == EState.LOADING){
+            BeanUtils.copyProperties(drone, newDrone);
+            this.droneRepository.save(newDrone);
+        }else if(drone.getBatteryCapacity() > 25 && drone.getState() == EState.LOADING){
+            throw new DroneNotReadyForLoadingBatteryException(
+                    "Drones only can in loading state when the battery is below 25%, current drone serial number: "
+                            +drone.getSerialNumber()+" and battery level: "
+                            +drone.getBatteryCapacity()+"% ");
+        }
         return this.droneRepository.save(drone);
     }
     
