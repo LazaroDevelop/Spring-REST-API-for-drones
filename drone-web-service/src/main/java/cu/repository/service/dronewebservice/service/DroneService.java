@@ -39,7 +39,7 @@ public class DroneService implements IDroneService {
     @Override
     public List<DroneEntity> checkAvailableDronesForLoading() {
         List<DroneEntity> drones = this.droneRepository.findAll();
-        return drones.stream().filter(d -> d.getState() == EState.IDLE && d.getState() == EState.LOADED).collect(Collectors.toList());
+        return drones.stream().filter(d -> d.getBatteryCapacity() > 25 && d.getState() != EState.LOADING && d.getState() != EState.DELIVERING).collect(Collectors.toList());
     }
 
     @Override
