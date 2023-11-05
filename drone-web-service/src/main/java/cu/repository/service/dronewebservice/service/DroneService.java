@@ -34,7 +34,7 @@ public class DroneService implements IDroneService {
     @Override
     public List<DroneEntity> checkAvailableDronesForLoading() {
         List<DroneEntity> drones = this.droneRepository.findAll();
-        return drones.stream().filter(d -> d.getState() == EState.IDLE || d.getState() == EState.LOADED).collect(Collectors.toList());
+        return drones.stream().filter(d -> d.getState() == EState.IDLE && d.getState() == EState.LOADED).collect(Collectors.toList());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class DroneService implements IDroneService {
             double currentWeight = drone.get().getWeightLimit() + medication.getWeight();
             if(currentWeight >= MAX_WEIGHT){
                 throw new WeightLimitException(
-                        "Drone with serial number: " + drone.get().getSerialNumber() + "has the max weight supported, this drone can't load more medications"
+                        "Drone with serial number: " + drone.get().getSerialNumber() + " has the max weight supported, this drone can't load more medications"
                 );
             }
             drone.get().setWeightLimit(drone.get().getWeightLimit() + medication.getWeight());
@@ -92,12 +92,10 @@ public class DroneService implements IDroneService {
         DroneEntity newDrone = new DroneEntity();
         if(drone.getBatteryCapacity() <= 25 && drone.getState() == EState.LOADING){
             BeanUtils.copyProperties(drone, newDrone);
-            this.droneRepository.save(newDrone);
+            return this.droneRepository.save(newDrone);
         }else if(drone.getBatteryCapacity() > 25 && drone.getState() == EState.LOADING){
             throw new DroneNotReadyForLoadingBatteryException(
-                    "Drones only can in loading state when the battery is below 25%, current drone serial number: "
-                            +drone.getSerialNumber()+" and battery level: "
-                            +drone.getBatteryCapacity()+"% ");
+                    "Drones only can in loading state when the battery is below 25%, current drone has " + drone.getBatteryCapacity() + "% of battery capacity");
         }
         return this.droneRepository.save(drone);
     }
