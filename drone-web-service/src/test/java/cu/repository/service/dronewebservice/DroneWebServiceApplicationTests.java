@@ -7,9 +7,7 @@ import java.util.HashSet;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -44,10 +42,10 @@ class DroneWebServiceApplicationTests {
     @Test
     void createNewDroneWithTestClient() {
         DroneEntity drone = new DroneEntity();
-        drone.setBattery(80);
+        drone.setBatteryCapacity(80);
         drone.setMedications(new HashSet<MedicationEntity>());
         drone.setModel(EModels.CRUISERWEIGHT);
-        drone.setWeight(498.2);
+        drone.setWeightLimit(498.2);
         drone.setState(EState.IDLE);
 
         this.webTestClient.post()
@@ -63,10 +61,10 @@ class DroneWebServiceApplicationTests {
     @Test
     void createNewDrone() {
         DroneEntity drone = new DroneEntity();
-        drone.setBattery(80);
+        drone.setBatteryCapacity(80);
         drone.setMedications(new HashSet<MedicationEntity>());
         drone.setModel(EModels.CRUISERWEIGHT);
-        drone.setWeight(498.2);
+        drone.setWeightLimit(498.2);
         drone.setState(EState.IDLE);
 
         assertEquals(this.droneRepository.save(drone), drone);
